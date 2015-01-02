@@ -1,5 +1,6 @@
 package in.paperbind.sunshine.app;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -63,7 +64,7 @@ public class ForecastFragment extends Fragment {
 
 
             FetchWeatherTask weatherTask = new FetchWeatherTask();
-            weatherTask.execute("gurgaon");
+            weatherTask.execute("122001");
             return true;
         }
         return true;
@@ -103,14 +104,23 @@ public class ForecastFragment extends Fragment {
         // Get a reference to the ListView, and attach this adapter to it.
         ListView listView = (ListView) rootView.findViewById(R.id.list_item_forecast_textview);
         listView.setAdapter(mforecastAdapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener()
+        {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id)
             {
-                String forecast = mforecastAdapter.getItem(position);
-                Toast.makeText(getActivity(),forecast, Toast.LENGTH_SHORT).show();
+                String forecast = mforecastAdapter.getItem(position).toString();
+                Toast t = Toast.makeText(getActivity(), forecast, Toast.LENGTH_SHORT);
+                t.show();
+
+                Intent callDetails;
+                callDetails = new Intent(getActivity(),DetailActivity.class)
+                                    .putExtra(Intent.EXTRA_TEXT, forecast);
+                startActivity(callDetails);
+
             }
         });
+
 
         return rootView;
     }
@@ -214,7 +224,7 @@ public class ForecastFragment extends Fragment {
             String forecastJsonStr = null;
 
             String format = "json";
-            String units = "metric";
+            String units = "imperial";
             int numDays = 7;
 
             try {
